@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Feasible Contacts to Stable Grasps: Stability-Aware Dexterous Grasping in Cluttered Scenes</title>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary-blue: #aa2a5bff;
+            --diffusion-purple: #5048aaff;
+            --robot-orange: #9554ffff;
+            --light-bg: #F8F9FA;
+        }
+        .custom-lead {
+        font-size: 1.0rem;    /* 默认1.25rem */
+        line-height: 1.0;      /* 默认1.5 */
+        letter-spacing: 0.03em;/* 字母间距 */
+        max-width: 100%;        /* 控制文本行宽 */
+        margin: 0 auto 1.5rem; /* 居中+下边距 */
+       }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .hero-banner {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--diffusion-purple) 100%);
+            color: white;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-banner::before {
+            content: "";
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon fill="rgba(255,255,255,0.05)" points="0,100 100,0 100,100"/></svg>');
+            background-size: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+        
+        .nav-pills .nav-link.active {
+            background-color: var(--robot-orange);
+        }
+        
+        .feature-card {
+            border-left: 4px solid var(--primary-blue);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .metric-badge {
+            background: var(--diffusion-purple);
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .comparison-slider {
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .comparison-slider img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            background: #000;
+            border-radius: 8px;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .img-container {
+    transition: transform 0.2s;
+    background: #f8f9fa;
+}
+.img-container:hover {
+    transform: translateY(-2px);
+}
+.caption {
+    line-height: 1.2;
+    opacity: 0.9;
+}
+        .scrollable-illustration {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.2) transparent;
+}
+.scrollable-illustration::-webkit-scrollbar {
+    height: 8px;
+}
+.scrollable-illustration::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+#methodology {
+    --content-max-width: 1440px;  /* 控制最大显示宽度 */
+}
+
+#methodology .container-fluid {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+}
+
+#methodology .card-img-top {
+    padding: 0 2rem;  /* 图片两侧留白 */
+}
+@media (max-width: 768px) {
+    .abstract-container {
+        column-count: 1 !important;
+    }
+    .illustration-container {
+        margin-left: -1rem;
+        margin-right: -1rem;
+    }
+}
+        @media (max-width: 768px) {
+            .hero-banner {
+                padding: 2rem 0;
+            }
+        }
+
+    
+    </style>
+</head>
+<body>
+
+    <style>
+        /* 自定义标题样式 */
+        .hero-banner h1 {
+            font-size: 2.25rem !important;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem !important;
+            line-height: 1.25;
+        }
+        
+        /* 适应移动端 */
+        @media (max-width: 768px) {
+            .hero-banner h1 {
+                font-size: 1.5rem !important;
+            }
+        }
+        </style>
+        
+        <section class="hero-banner text-center">
+            <div class="container position-relative" style="z-index: 1;">
+                <h1 class="display-5 fw-bold mb-5">From Feasible Contacts to Stable Grasps: Stability-Aware Dexterous Grasping in Cluttered Scenes</h1>
+                
+                <!-- 按钮组 -->
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="https://github.com/DexMain/StaConGrasp" class="btn btn-light btn-lg px-4 py-2 rounded-pill">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 16 16" style="margin-right: 6px;">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2.01-.27.69 0 1.36.09 2.01.27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    Code
+                    </a>
+                    
+                </div>
+            </div>
+        </section>
+
+    <section class="py-5">
+        <div class="container">
+            <!-- 摘要文本区块 -->
+            <div class="abstract-container mb-5">
+                <h2 class="display-5 mb-4 border-bottom pb-3">Abstract</h2>
+                <p style="text-align: justify;">
+                    Stable dexterous grasping is essential for robotic manipulation in complex industrial environments. For multi-fingered hands, locally feasible contacts do not necessarily form stable contact configurations, particularly for objects with complex geometries or shifting internal contents under embodied single-view of robot. Existing contact-based methods mainly focus on contact generation with limited stability evaluation significantly affecting grasping stability. To address this issue, a two-stage stability-aware dexterous grasping framework, termed StaConGrasp, is proposed to evaluate and select multi-finger contact configurations before complete grasp pose generation. Specifically, in the first stage, a Contact Stability Network (CSNet) is developed to evaluate and rank candidate contact configurations based on single-view object point clouds and geometry-related stability cues. To provide fingertip-wise contact supervision, the Fingertip-wise Surface-Projected Interaction Bisector Surface (FSP-IBS) is introduced to project hand--object interaction information encoded in the IBS onto the object surface. To convert the selected contact configuration into a physically feasible complete grasp pose, Dynamic Anchor Patch-guided physical optimization (DAP-Opt) is introduced in the second stage, where discrete point-contact constraints are relaxed into dynamically updated local surface regions and the complete grasp pose is refined under penetration and stability constraints. Simulation experiments demonstrate that stability-aware contact evaluation and selection improve grasp success, with StaConGrasp achieving the highest success rate in five of six test settings and demonstrating cross-hand generalization. Real-robot experiments achieve an overall success rate of 88.0%, including successful grasps of objects with shifting internal contents.
+                </p>
+            </div>
+    
+            <div class="illustration-container bg-light rounded-4 p-4 shadow-lg">
+                <!-- 响应式滚动容器 -->
+                <div class="scrollable-illustration" style="max-height: 70vh; overflow-y: auto">
+                    <img src="./static/figures_StaConGrasp/StaConGrasp.png" 
+                         alt="Framework" 
+                         class="img-fluid w-auto d-block mx-auto"
+                         style="max-width: 1200px; height: auto; transform: translateZ(0)"
+                         loading="lazy">
+                </div>
+            </div>
+            
+    
+               
+    
+            <!-- 关键词卡片（全宽） -->
+            <h3 class="display-5 mb-4 border-bottom pb-3">Keywords</h3>
+            <div class="row mt-4">
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="feature-card p-3 h-100">
+                        <h5><span class="badge metric-badge me-2">1</span> Contact stability</h5>
+                        
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="feature-card p-3 h-100">
+                        <h5><span class="badge metric-badge me-2">2</span> Dexterous grasping</h5>
+                       
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="feature-card p-3 h-100">
+                        <h5><span class="badge metric-badge me-2">3</span> Diffusion models</h5>
+                        
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="feature-card p-3 h-100">
+                        <h5><span class="badge metric-badge me-2">4</span> Robotic manipulation</h5>
+                        
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Results -->
+    
+
+ <!-- Methodology -->
+<section class="py-5" id="methodology">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Problem, Method, and Results</h2>
+        
+        <div class="row g-4 align-items-start justify-content-center">
+            <div class="col-md-6">
+                <h4 class="text-center mb-3">Problems and Challenges</h4>
+                <video 
+                    src="static/Supplementary_video_StaConGrasp/problem_define/industry_grasp.mp4" 
+                    controls 
+                    muted 
+                    playsinline 
+                    class="w-100 rounded shadow"
+                    style="display: block;">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="col-md-6">
+                <h4 class="text-center mb-3">Method and Experimental Results</h4>
+                <video 
+                    src="static/Supplementary_video_StaConGrasp/sim_and_real_exp/all_line.mp4" 
+                    controls 
+                    muted 
+                    playsinline 
+                    class="w-100 rounded shadow"
+                    style="display: block;">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">More Experimental Results</h2>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <video controls muted playsinline class="w-100 rounded shadow" style="border-radius: 10px;">
+                        <source src="static/Supplementary_video_StaConGrasp/more_results/more_results.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    
+    <style>
+    /* 添加自定义样式 */
+    @media (min-width: 768px) {
+        .carousel-item {
+            min-height: 650px; /* 根据实际内容调整 */
+        }
+    }
+    </style>
+
+
+   
+    
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>StaConGrasp</h5>
+                    <p>From Feasible Contacts to Stable Grasps: Stability-Aware Dexterous Grasping in Cluttered Scenes</p>
+                </div>
+                <!-- Double-blind: hide Contact and affiliation info
+                <div class="col-md-4">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled">
+                        <li>Yanmin Zhou</li>
+                        <li>Shanghai Research Institute
+                            for Intelligent Autonomous Systems, Tongji University</li>
+                        <li>yanmin.zhou@tongji.edu.cn</li>
+                    </ul>
+                </div>
+                -->
+                <div class="col-md-4">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/DexMain/StaConGrasp" class="text-white" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
+                        <li><a href="https://huggingface.co/datasets/lhrlhr/DexGraspNet2.0" class="text-white" target="_blank" rel="noopener noreferrer">Dataset Download</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!--
+            <hr class="my-4 bg-light">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="small">© 2022 Shanghai Research Institute
+                        for Intelligent Autonomous Systems.
+
+                        </p>
+
+                </div>  
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-white">Privacy Policy</a> |
+                    <a href="#" class="text-white">Terms of Service</a>
+                </div>
+            </div>
+            -->
+        </div>
+    </footer>
+    </body>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="static/bootstrap/js/bootstrap.bundle.min.js"></script>
