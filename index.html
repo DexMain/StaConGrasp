@@ -156,9 +156,14 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center center;
             display: block;
             border-radius: 0;
             box-shadow: none;
+        }
+        /* Keep caption text at the bottom of the left video visible */
+        .equal-video-box video.prefer-bottom {
+            object-position: center bottom;
         }
 
     
@@ -274,6 +279,7 @@
                 <h4 class="text-center mb-3">Problems and Challenges</h4>
                 <div class="equal-video-box mt-auto">
                     <video 
+                        class="prefer-bottom"
                         src="static/Supplementary_video_StaConGrasp/problem_define/Problems%20and%20Challenges.mp4" 
                         controls 
                         muted 
